@@ -6,7 +6,9 @@
 import path from 'path';
 import url from 'url';
 import { app, Menu } from 'electron';
+import os from 'os';
 import { devMenuTemplate } from './menu/dev_menu_template';
+import { editMenuTemplate } from './menu/edit_menu_template';
 import createWindow from './helpers/window';
 
 // Special module holding environment variables which you declared
@@ -16,11 +18,15 @@ import env from './env';
 var mainWindow;
 
 var setApplicationMenu = function () {
-    var menus = null;
+    var menus = [];
     if (env.name !== 'production') {
-        menus = [devMenuTemplate];
+        menus.push(devMenuTemplate);
     }
-    Menu.setApplicationMenu(menus);
+    if (os.platform() !== 'win32') {
+        menus.push(editMenuTemplate);
+    }
+
+    Menu.setApplicationMenu(menus.length === 0 ? null : menus);
 };
 
 // Save userData in separate folders for each environment.
