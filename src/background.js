@@ -37,8 +37,8 @@ app.on('ready', function () {
     setApplicationMenu();
 
     var mainWindow = createWindow('main', {
-        width: 1000,
-        height: 600
+        width: 1200,
+        height: 800
     });
 
     mainWindow.loadURL(url.format({
