@@ -18,15 +18,11 @@ import env from './env';
 var mainWindow;
 
 var setApplicationMenu = function () {
-    var menus = [];
+    var menus = [editMenuTemplate];
     if (env.name !== 'production') {
         menus.push(devMenuTemplate);
     }
-    if (os.platform() !== 'win32') {
-        menus.push(editMenuTemplate);
-    }
-
-    Menu.setApplicationMenu(menus.length === 0 ? null : menus);
+    Menu.setApplicationMenu(Menu.buildFromTemplate(menus));
 };
 
 // Save userData in separate folders for each environment.
