@@ -1,8 +1,8 @@
   {
   "name": "faithlife-messages",
   "productName": "Faithlife Messages",
-  "description": "A simple Electron shell for Faithlife Messages.",
-  "version": "0.1.0",
+  "description": "Faithlife Messages",
+  "version": "0.2.0",
   "author": "Dustin Masters <dustin.masters@faithlife.com>",
   "copyright": "",
   "homepage": "http://git/DustinMasters/FaithlifeMessages",
