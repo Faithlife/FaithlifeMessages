@@ -16,6 +16,7 @@ import createWindow from './helpers/window';
 import env from './env';
 
 var mainWindow;
+var willQuitApp = false;
 
 // Save userData in separate folders for each environment.
 // Thanks to this you can use production and development versions of the app
@@ -26,7 +27,7 @@ if (env.name !== 'production') {
 }
 
 app.on('ready', function () {
-    var mainWindow = createWindow('main', {
+    mainWindow = createWindow('main', {
         width: 1200,
         height: 800
     });
@@ -37,11 +38,18 @@ app.on('ready', function () {
         slashes: true
     }));
 
+    mainWindow.on('close', (e) => {
+        if (!willQuitApp) {
+            e.preventDefault();
+            mainWindow.hide();
+        }
+    })
+
     if (env.name === 'development') {
         mainWindow.openDevTools();
     }
 });
 
-app.on('window-all-closed', function () {
-    app.quit();
-});
+app.on('activate', () => mainWindow.show());
+
+app.on('before-quit', () => willQuitApp = true);
