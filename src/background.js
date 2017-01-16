@@ -7,8 +7,7 @@ import path from 'path';
 import url from 'url';
 import { app, Menu } from 'electron';
 import os from 'os';
-import { devMenuTemplate } from './menu/dev_menu_template';
-import { editMenuTemplate } from './menu/edit_menu_template';
+import { getTemplate } from './menu/menu_template';
 import createWindow from './helpers/window';
 
 // Special module holding environment variables which you declared
@@ -27,6 +26,7 @@ if (env.name !== 'production') {
 }
 
 app.on('ready', function () {
+    Menu.setApplicationMenu(Menu.buildFromTemplate(getTemplate(app)));
     mainWindow = createWindow('main', {
         width: 1200,
         height: 800
