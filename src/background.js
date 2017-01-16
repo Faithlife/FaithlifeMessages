@@ -17,14 +17,6 @@ import env from './env';
 
 var mainWindow;
 
-var setApplicationMenu = function () {
-    var menus = [editMenuTemplate];
-    if (env.name !== 'production') {
-        menus.push(devMenuTemplate);
-    }
-    Menu.setApplicationMenu(Menu.buildFromTemplate(menus));
-};
-
 // Save userData in separate folders for each environment.
 // Thanks to this you can use production and development versions of the app
 // on same machine like those are two separate apps.
@@ -34,8 +26,6 @@ if (env.name !== 'production') {
 }
 
 app.on('ready', function () {
-    setApplicationMenu();
-
     var mainWindow = createWindow('main', {
         width: 1200,
         height: 800
