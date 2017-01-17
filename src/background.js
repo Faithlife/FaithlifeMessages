@@ -39,12 +39,14 @@ app.on('ready', function () {
         slashes: true
     }));
 
-    mainWindow.on('close', (e) => {
-        if (!willQuitApp) {
-            e.preventDefault();
-            mainWindow.hide();
-        }
-    })
+    if (process.platform === 'darwin') {
+        mainWindow.on('close', (e) => {
+            if (!willQuitApp) {
+                e.preventDefault();
+                mainWindow.hide();
+            }
+        });
+    }
 
     if (env.name === 'development') {
         mainWindow.openDevTools();
