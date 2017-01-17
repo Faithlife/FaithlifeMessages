@@ -14,7 +14,13 @@
       "app/**/*",
       "node_modules/**/*",
       "package.json"
-    ]
+    ],
+    "mac": {
+      "publish": ["github"]
+    },
+    "win": {
+      "publish": ["github"]
+    }
   },
   "scripts": {
     "postinstall": "install-app-deps",
