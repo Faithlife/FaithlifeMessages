@@ -9,6 +9,7 @@ import { app, Menu } from 'electron';
 import os from 'os';
 import { getTemplate } from './menu/menu_template';
 import createWindow from './helpers/window';
+import { autoUpdater } from 'electron-auto-updater';
 
 // Special module holding environment variables which you declared
 // in config/env_xxx.json file.
@@ -48,6 +49,21 @@ app.on('ready', function () {
     if (env.name === 'development') {
         mainWindow.openDevTools();
     }
+
+    autoUpdater.checkForUpdates();
+    console.log('autoUpdater.getFeedURL()', autoUpdater.getFeedURL());
+    autoUpdater.on('error', (err) => {
+        console.log('err');
+    });
+    autoUpdater.on('checking-for-update', () => {
+        console.log('checking-for-update');
+    });
+    autoUpdater.on('update-available', () => {
+        console.log('update-available');
+    });
+    autoUpdater.on('update-not-available', () => {
+        console.log('update-not-available');
+    });
 });
 
 app.on('activate', () => mainWindow.show());

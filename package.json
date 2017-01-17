@@ -1,4 +1,4 @@
-  {
+{
   "name": "faithlife-messages",
   "productName": "Faithlife Messages",
   "description": "Faithlife Messages",
@@ -16,10 +16,14 @@
       "package.json"
     ],
     "mac": {
-      "publish": ["github"]
+      "publish": [
+        "github"
+      ]
     },
     "win": {
-      "publish": ["github"]
+      "publish": [
+        "github"
+      ]
     }
   },
   "scripts": {
@@ -30,6 +34,7 @@
     "start": "gulp start"
   },
   "dependencies": {
+    "electron-auto-updater": "^1.0.0",
     "fs-jetpack": "^0.10.2"
   },
   "devDependencies": {
