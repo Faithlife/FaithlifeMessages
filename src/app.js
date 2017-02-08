@@ -1,3 +1,7 @@
-document.querySelector('.messages-iframe').addEventListener('new-window', (e) => {
+const webViewElement = document.querySelector('.messages-iframe');
+
+webViewElement.addEventListener('new-window', (e) => {
     require('electron').shell.openExternal(e.url);
 })
+
+window.addEventListener('focus', () => webViewElement.focus());
