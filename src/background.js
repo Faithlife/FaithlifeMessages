@@ -69,6 +69,7 @@ app.on('ready', function () {
         autoUpdater.on('update-downloaded', () => {
             // If an update already downloaded, install it now
             log.info("update-downloaded");
+            mainWindow.removeAllListeners('close');
             autoUpdater.quitAndInstall();
         })
     }
