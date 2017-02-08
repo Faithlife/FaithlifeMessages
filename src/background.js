@@ -10,6 +10,7 @@ import os from 'os';
 import { getTemplate } from './menu/menu_template';
 import createWindow from './helpers/window';
 import { autoUpdater } from 'electron-auto-updater';
+import log from 'electron-log'
 
 // Special module holding environment variables which you declared
 // in config/env_xxx.json file.
@@ -27,6 +28,8 @@ if (env.name !== 'production') {
 }
 
 app.on('ready', function () {
+    log.transports.file.level = 'info';
+    log.info('Starting up');
     Menu.setApplicationMenu(Menu.buildFromTemplate(getTemplate(app)));
     mainWindow = createWindow('main', {
         width: 1200,
@@ -41,7 +44,9 @@ app.on('ready', function () {
 
     if (process.platform === 'darwin') {
         mainWindow.on('close', (e) => {
+            log.info("Close event received");
             if (!willQuitApp) {
+                log.info("Aborting close.");
                 e.preventDefault();
                 mainWindow.hide();
             }
@@ -50,22 +55,27 @@ app.on('ready', function () {
 
     if (env.name === 'development') {
         mainWindow.openDevTools();
-    }
+    } else {
+        autoUpdater.checkForUpdates();
 
-    autoUpdater.checkForUpdates();
-    console.log('autoUpdater.getFeedURL()', autoUpdater.getFeedURL());
-    autoUpdater.on('error', (err) => {
-        console.log('err');
-    });
-    autoUpdater.on('checking-for-update', () => {
-        console.log('checking-for-update');
-    });
-    autoUpdater.on('update-available', () => {
-        console.log('update-available');
-    });
-    autoUpdater.on('update-not-available', () => {
-        console.log('update-not-available');
-    });
+        autoUpdater.on('error', (err) => {
+            log.info(err);
+        });
+        autoUpdater.on('checking-for-update', () => {
+            log.info('checking-for-update');
+        });
+        autoUpdater.on('update-available', () => {
+            log.info('update-available');
+        });
+        autoUpdater.on('update-not-available', () => {
+            log.info('update-not-available');
+        });
+        autoUpdater.on('update-downloaded', () => {
+            // If an update already downloaded, install it now
+            log.info("update-downloaded");
+            autoUpdater.quitAndInstall();
+        })
+    }
 });
 
 app.on('activate', () => mainWindow.show());
