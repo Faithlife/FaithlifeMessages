@@ -17,7 +17,6 @@ import log from 'electron-log'
 import env from './env';
 
 var mainWindow;
-var willQuitApp = false;
 
 // Save userData in separate folders for each environment.
 // Thanks to this you can use production and development versions of the app
@@ -44,12 +43,9 @@ app.on('ready', function () {
 
     if (process.platform === 'darwin') {
         mainWindow.on('close', (e) => {
-            log.info("Close event received");
-            if (!willQuitApp) {
-                log.info("Aborting close.");
-                e.preventDefault();
-                mainWindow.hide();
-            }
+            log.info("Aborting close.");
+            e.preventDefault();
+            mainWindow.hide();
         });
     }
 
@@ -80,4 +76,9 @@ app.on('ready', function () {
 
 app.on('activate', () => mainWindow.show());
 
-app.on('before-quit', () => willQuitApp = true);
+app.on('before-quit', () => {
+    mainWindow.removeAllListeners('close');
+    mainWindow.close();
+});
+
+app.on('window-all-closed', app.quit);
