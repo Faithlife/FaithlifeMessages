@@ -55,6 +55,9 @@ export var getTemplate = (app) => {
         },
         {
           role: 'togglefullscreen'
+        },
+        {
+          role: 'toggledevtools'
         }
       ]
     },
