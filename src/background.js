@@ -78,7 +78,6 @@ app.on('activate', () => mainWindow.show());
 
 app.on('before-quit', () => {
     mainWindow.removeAllListeners('close');
-    mainWindow.close();
 });
 
 app.on('window-all-closed', app.quit);
