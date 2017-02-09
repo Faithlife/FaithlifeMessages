@@ -17,7 +17,11 @@ import log from 'electron-log'
 import env from './env';
 
 var mainWindow;
-var macCloseHandler;
+var macCloseHandler = (e) => {
+    log.info("Aborting close.");
+    e.preventDefault();
+    mainWindow.hide();
+};
 
 // Save userData in separate folders for each environment.
 // Thanks to this you can use production and development versions of the app
@@ -43,11 +47,7 @@ app.on('ready', function () {
     }));
 
     if (process.platform === 'darwin') {
-        macCloseHandler = mainWindow.on('close', (e) => {
-            log.info("Aborting close.");
-            e.preventDefault();
-            mainWindow.hide();
-        });
+        mainWindow.on('close', macCloseHandler);
     }
 
     if (env.name === 'development') {
@@ -70,7 +70,7 @@ app.on('ready', function () {
         autoUpdater.on('update-downloaded', () => {
             // If an update already downloaded, install it now
             log.info("update-downloaded");
-            mainWindow.removeEventListener('close', macCloseHandler);
+            mainWindow.removeListener('close', macCloseHandler);
             autoUpdater.quitAndInstall();
         })
     }
@@ -79,7 +79,7 @@ app.on('ready', function () {
 app.on('activate', () => mainWindow.show());
 
 app.on('before-quit', () => {
-    mainWindow.removeEventListener('close', macCloseHandler);
+    mainWindow.removeListener('close', macCloseHandler);
 });
 
 app.on('window-all-closed', app.quit);
