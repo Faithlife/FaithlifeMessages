@@ -5,3 +5,4 @@ webViewElement.addEventListener('new-window', (e) => {
 })
 
 window.addEventListener('focus', () => webViewElement.focus());
+window.addEventListener('blur', () => webViewElement.blur());
