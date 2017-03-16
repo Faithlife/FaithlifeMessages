@@ -3,18 +3,16 @@
 // It doesn't have any windows which you can see on screen, but we can open
 // window from here.
 
+import { Menu, app } from 'electron';
+
+import { autoUpdater } from 'electron-updater';
+import createWindow from './helpers/window';
+import env from './env';
+import { getTemplate } from './menu/menu_template';
+import log from 'electron-log'
+import os from 'os';
 import path from 'path';
 import url from 'url';
-import { app, Menu } from 'electron';
-import os from 'os';
-import { getTemplate } from './menu/menu_template';
-import createWindow from './helpers/window';
-import { autoUpdater } from 'electron-auto-updater';
-import log from 'electron-log'
-
-// Special module holding environment variables which you declared
-// in config/env_xxx.json file.
-import env from './env';
 
 var mainWindow;
 var macCloseHandler = (e) => {
