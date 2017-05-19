@@ -74,7 +74,11 @@ app.on('ready', function () {
     }
 });
 
-app.on('activate', () => mainWindow.show());
+app.on('activate', () => {
+    if (mainWindow) {
+        mainWindow.show();
+    }
+});
 
 app.on('before-quit', () => {
     mainWindow.removeListener('close', macCloseHandler);
