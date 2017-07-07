@@ -1,6 +1,6 @@
 # Faithlife Messages
 
-## [Visit the releases tab to grab an installer](https://git/Faithlife/FaithlifeMessages/releases)
+## [Visit the releases tab to grab an installer](https://github.com/Faithlife/FaithlifeMessages/releases)
 
 Based off of [Electron Boilerplate](https://github.com/szwacz/electron-boilerplate.git)
 
