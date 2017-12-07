@@ -29,6 +29,8 @@ if (env.name !== 'production') {
     app.setPath('userData', userDataPath + ' (' + env.name + ')');
 }
 
+app.setAppUserModelId('com.faithlife.electron-messages');
+
 app.on('ready', function () {
     log.transports.file.level = 'info';
     log.info('Starting up');
