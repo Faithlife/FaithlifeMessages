@@ -10,7 +10,6 @@ import createWindow from './helpers/window';
 import env from './env';
 import { getTemplate } from './menu/menu_template';
 import log from 'electron-log';
-import os from 'os';
 import path from 'path';
 import url from 'url';
 
@@ -31,65 +30,79 @@ if (env.name !== 'production') {
 
 app.setAppUserModelId('com.faithlife.electron-messages');
 
-app.on('ready', function() {
-	log.transports.file.level = 'info';
-	log.info('Starting up');
-	Menu.setApplicationMenu(Menu.buildFromTemplate(getTemplate(app)));
-	mainWindow = createWindow('main', {
-		width: 1200,
-		height: 800,
-		webPreferences: {
-			webviewTag: true,
-			nodeIntegration: true,
-		},
+if (!app.requestSingleInstanceLock()) {
+	app.quit();
+} else {
+	app.on('second-instance', () => {
+		if (mainWindow) {
+			if (mainWindow.isMinimized()) {
+				mainWindow.restore();
+			}
+
+			mainWindow.focus();
+		}
 	});
 
-	mainWindow.loadURL(
-		url.format({
-			pathname: path.join(__dirname, 'app.html'),
-			protocol: 'file:',
-			slashes: true,
-		}),
-	);
-
-	if (process.platform === 'darwin') {
-		mainWindow.on('close', macCloseHandler);
-	}
-
-	if (env.name === 'development') {
-		mainWindow.openDevTools();
-	} else {
-		autoUpdater.checkForUpdates();
-
-		autoUpdater.on('error', err => {
-			log.info(err);
+	app.on('ready', function() {
+		log.transports.file.level = 'info';
+		log.info('Starting up');
+		Menu.setApplicationMenu(Menu.buildFromTemplate(getTemplate(app)));
+		mainWindow = createWindow('main', {
+			width: 1200,
+			height: 800,
+			webPreferences: {
+				webviewTag: true,
+				nodeIntegration: true,
+			},
 		});
-		autoUpdater.on('checking-for-update', () => {
-			log.info('checking-for-update');
-		});
-		autoUpdater.on('update-available', () => {
-			log.info('update-available');
-		});
-		autoUpdater.on('update-not-available', () => {
-			log.info('update-not-available');
-		});
-		autoUpdater.on('update-downloaded', () => {
-			// If an update already downloaded, install it now
-			log.info('update-downloaded');
-			mainWindow.removeListener('close', macCloseHandler);
-			autoUpdater.quitAndInstall();
-		});
-	}
-});
 
-app.on('activate', () => {
-	if (mainWindow) {
-		mainWindow.show();
-	}
-});
+		mainWindow.loadURL(
+			url.format({
+				pathname: path.join(__dirname, 'app.html'),
+				protocol: 'file:',
+				slashes: true,
+			}),
+		);
 
-app.on('before-quit', () => {
-	mainWindow.removeListener('close', macCloseHandler);
-});
+		if (process.platform === 'darwin') {
+			mainWindow.on('close', macCloseHandler);
+		}
 
-app.on('window-all-closed', app.quit);
+		if (env.name === 'development') {
+			mainWindow.openDevTools();
+		} else {
+			autoUpdater.checkForUpdates();
+
+			autoUpdater.on('error', err => {
+				log.info(err);
+			});
+			autoUpdater.on('checking-for-update', () => {
+				log.info('checking-for-update');
+			});
+			autoUpdater.on('update-available', () => {
+				log.info('update-available');
+			});
+			autoUpdater.on('update-not-available', () => {
+				log.info('update-not-available');
+			});
+			autoUpdater.on('update-downloaded', () => {
+				// If an update already downloaded, install it now
+				log.info('update-downloaded');
+				mainWindow.removeListener('close', macCloseHandler);
+				autoUpdater.quitAndInstall();
+			});
+		}
+	});
+
+	app.on('activate', () => {
+		if (mainWindow) {
+			mainWindow.show();
+		}
+	});
+
+	app.on('before-quit', () => {
+		mainWindow.removeListener('close', macCloseHandler);
+	});
+
+	app.on('window-all-closed', app.quit);
+}
