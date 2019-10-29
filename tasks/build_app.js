@@ -28,13 +28,13 @@ gulp.task('less', function() {
 		.pipe(gulp.dest(destDir.path('stylesheets')));
 });
 
-gulp.task('environment', function(cb) {
+gulp.task('environment', function(done) {
 	var configFile = 'config/env_' + utils.getEnvName() + '.json';
 	projectDir.copy(configFile, destDir.path('env.json'), { overwrite: true });
-	cb();
+	done();
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', function(done) {
 	var beepOnError = function(done) {
 		return function(err) {
 			if (err) {
@@ -56,6 +56,7 @@ gulp.task('watch', function() {
 			gulp.start('less', beepOnError(done));
 		}),
 	);
+	done();
 });
 
 gulp.task('build', gulp.series('bundle', 'less', 'environment'));

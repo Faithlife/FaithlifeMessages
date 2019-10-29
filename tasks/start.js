@@ -8,7 +8,7 @@ gulp.task(
 	'start',
 	gulp.series(
 		'build',
-		gulp.parallel('watch', function() {
+		gulp.parallel('watch', function(done) {
 			childProcess
 				.spawn(electron, ['.'], {
 					stdio: 'inherit',
@@ -17,6 +17,7 @@ gulp.task(
 					// User closed the app. Kill the host process.
 					process.exit();
 				});
+			done();
 		}),
 	),
 );
