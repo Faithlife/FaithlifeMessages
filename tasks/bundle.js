@@ -67,8 +67,8 @@ module.exports = function(src, dest, opts) {
 		bundle
 			.generate({
 				format: 'cjs',
-				sourceMap: true,
-				sourceMapFile: jsFile,
+				sourcemap: true,
+				sourcemapFile: jsFile,
 			})
 			.then(function({ output }) {
 				// Wrap code in self invoking function so the variables don't
