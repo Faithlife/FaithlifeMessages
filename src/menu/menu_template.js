@@ -72,19 +72,6 @@ export var getTemplate = app => {
 				},
 			],
 		},
-		{
-			role: 'help',
-			submenu: [
-				{
-					label: 'Get Help',
-					click() {
-						require('electron').shell.openExternal(
-							'http://faithlife.com/faithlife-platform-team',
-						);
-					},
-				},
-			],
-		},
 	];
 
 	if (process.platform === 'darwin') {
