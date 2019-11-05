@@ -21,7 +21,7 @@ if (env.name !== 'production') {
 	app.setPath('userData', userDataPath + ' (' + env.name + ')');
 }
 
-ipcMain.on('notification-shim', (_, _) => {
+ipcMain.on('notification-shim', () => {
 	if (!mainWindow.isFocused()) {
 		mainWindow.flashFrame(true);
 	}
