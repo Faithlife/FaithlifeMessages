@@ -2,7 +2,7 @@ import { Menu, app, ipcMain, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import createWindow from './helpers/window';
 import env from './env';
-import { getTemplate } from './menu/menu_template';
+import { appMenu, inputMenu, selectionMenu } from './menus';
 import log from 'electron-log';
 import path from 'path';
 
@@ -45,7 +45,7 @@ if (!app.requestSingleInstanceLock()) {
 	app.on('ready', function() {
 		log.transports.file.level = 'info';
 		log.info('Starting up');
-		Menu.setApplicationMenu(Menu.buildFromTemplate(getTemplate(app)));
+		Menu.setApplicationMenu(null);
 		mainWindow = createWindow('main', {
 			width: 1200,
 			height: 800,
@@ -68,8 +68,27 @@ if (!app.requestSingleInstanceLock()) {
 			shell.openExternal(url);
 		});
 
+		mainWindow.webContents.on('context-menu', (event, props) => {
+			const { selectionText, isEditable } = props;
+			if (isEditable) {
+				inputMenu.popup(mainWindow);
+			} else if (selectionText && selectionText.trim() !== '') {
+				selectionMenu.popup(mainWindow);
+			}
+		});
+
+		mainWindow.webContents.on('before-input-event', (event, input) => {
+			if (input.type === 'keyUp' && input.key === 'F12') {
+				if (mainWindow.webContents.isDevToolsOpened()) {
+					mainWindow.webContents.closeDevTools();
+				} else {
+					mainWindow.webContents.openDevTools({ mode: 'detach' });
+				}
+			}
+		});
+
 		if (env.name === 'development') {
-			mainWindow.openDevTools();
+			mainWindow.webContents.openDevTools({ mode: 'detach' });
 		} else {
 			autoUpdater.checkForUpdates();
 
