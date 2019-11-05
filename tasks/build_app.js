@@ -12,7 +12,10 @@ var srcDir = jetpack.cwd('./src');
 var destDir = jetpack.cwd('./app');
 
 gulp.task('bundle', function() {
-	return Promise.all([bundle(srcDir.path('background.js'), destDir.path('background.js'))]);
+	return Promise.all([
+		bundle(srcDir.path('background.js'), destDir.path('background.js')),
+		bundle(srcDir.path('preload.js'), destDir.path('preload.js')),
+	]);
 });
 
 gulp.task('environment', function(done) {
