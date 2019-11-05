@@ -42,7 +42,6 @@
   "devDependencies": {
     "electron": "^7.0.0",
     "electron-builder": "^22.1.0",
-    "electron-mocha": "^8.1.2",
     "gulp": "^4.0.2",
     "gulp-batch": "^1.0.5",
     "gulp-watch": "^5.0.1",
