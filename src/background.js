@@ -1,20 +1,13 @@
-// This is main process of Electron, started as first thing when your
-// app starts. This script is running through entire life of your application.
-// It doesn't have any windows which you can see on screen, but we can open
-// window from here.
-
-import { Menu, app } from 'electron';
-
+import { Menu, app, ipcMain, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import createWindow from './helpers/window';
 import env from './env';
 import { getTemplate } from './menu/menu_template';
 import log from 'electron-log';
 import path from 'path';
-import url from 'url';
 
-var mainWindow;
-var macCloseHandler = e => {
+let mainWindow;
+let macCloseHandler = e => {
 	log.info('Aborting close.');
 	e.preventDefault();
 	mainWindow.hide();
@@ -24,9 +17,15 @@ var macCloseHandler = e => {
 // Thanks to this you can use production and development versions of the app
 // on same machine like those are two separate apps.
 if (env.name !== 'production') {
-	var userDataPath = app.getPath('userData');
+	const userDataPath = app.getPath('userData');
 	app.setPath('userData', userDataPath + ' (' + env.name + ')');
 }
+
+ipcMain.on('notification-shim', (_, _) => {
+	if (!mainWindow.isFocused()) {
+		mainWindow.flashFrame(true);
+	}
+});
 
 app.setAppUserModelId('com.faithlife.electron-messages');
 
@@ -51,22 +50,23 @@ if (!app.requestSingleInstanceLock()) {
 			width: 1200,
 			height: 800,
 			webPreferences: {
-				webviewTag: true,
-				nodeIntegration: true,
+				preload: path.join(__dirname, 'preload.js'),
+				enableRemoteModule: false,
 			},
 		});
 
-		mainWindow.loadURL(
-			url.format({
-				pathname: path.join(__dirname, 'app.html'),
-				protocol: 'file:',
-				slashes: true,
-			}),
-		);
+		mainWindow.loadURL('https://beta.faithlife.com/signin?returnUrl=/messages?view=partial');
 
 		if (process.platform === 'darwin') {
 			mainWindow.on('close', macCloseHandler);
 		}
+
+		mainWindow.on('focus', () => mainWindow.flashFrame(false));
+
+		mainWindow.webContents.on('new-window', (event, url) => {
+			event.preventDefault();
+			shell.openExternal(url);
+		});
 
 		if (env.name === 'development') {
 			mainWindow.openDevTools();

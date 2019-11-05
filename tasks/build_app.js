@@ -1,10 +1,8 @@
 'use strict';
 
 var gulp = require('gulp');
-var less = require('gulp-less');
 var watch = require('gulp-watch');
 var batch = require('gulp-batch');
-var plumber = require('gulp-plumber');
 var jetpack = require('fs-jetpack');
 var bundle = require('./bundle');
 var utils = require('./utils');
@@ -14,18 +12,7 @@ var srcDir = jetpack.cwd('./src');
 var destDir = jetpack.cwd('./app');
 
 gulp.task('bundle', function() {
-	return Promise.all([
-		bundle(srcDir.path('background.js'), destDir.path('background.js')),
-		bundle(srcDir.path('app.js'), destDir.path('app.js')),
-	]);
-});
-
-gulp.task('less', function() {
-	return gulp
-		.src(srcDir.path('stylesheets/main.less'))
-		.pipe(plumber())
-		.pipe(less())
-		.pipe(gulp.dest(destDir.path('stylesheets')));
+	return Promise.all([bundle(srcDir.path('background.js'), destDir.path('background.js'))]);
 });
 
 gulp.task('environment', function(done) {
@@ -59,4 +46,4 @@ gulp.task('watch', function(done) {
 	done();
 });
 
-gulp.task('build', gulp.series('bundle', 'less', 'environment'));
+gulp.task('build', gulp.series('bundle', 'environment'));
