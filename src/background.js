@@ -69,7 +69,7 @@ if (!app.requestSingleInstanceLock()) {
 	app.on('ready', function() {
 		log.transports.file.level = 'info';
 		log.info('Starting up');
-		Menu.setApplicationMenu(createAppMenu(appSettings));
+		Menu.setApplicationMenu(createAppMenu(app, appSettings));
 		mainWindow = createWindow('main', {
 			width: 1200,
 			height: 800,

@@ -1,6 +1,54 @@
 import { Menu, MenuItem } from 'electron';
 
-export function createAppMenu(appSettings) {
+export function createAppMenu(app, appSettings) {
+	const appMenu = new Menu();
+
+	// add MacOS app menu
+	if (process.platform === 'darwin') {
+		const quitMenuItem = new MenuItem({
+			role: 'quit',
+		});
+
+		appMenu.append(
+			new MenuItem({
+				label: app.getName(),
+				submenu: [quitMenuItem],
+			}),
+		);
+
+		appMenu.append(
+			new MenuItem({
+				label: 'Edit',
+				submenu: [
+					{
+						role: 'undo',
+					},
+					{
+						role: 'redo',
+					},
+					{
+						type: 'separator',
+					},
+					{
+						role: 'cut',
+					},
+					{
+						role: 'copy',
+					},
+					{
+						role: 'paste',
+					},
+					{
+						role: 'delete',
+					},
+					{
+						role: 'selectall',
+					},
+				],
+			}),
+		);
+	}
+
 	const groupMessagesPlaySoundMenuItem = new MenuItem({
 		type: 'checkbox',
 		label: 'Play sound',
@@ -67,13 +115,13 @@ export function createAppMenu(appSettings) {
 		],
 	});
 
-	const settingsMenuItem = new MenuItem({
-		label: 'Settings',
-		submenu: [groupMessagesMenuItem, directMessagesMenuItem],
-	});
+	appMenu.append(
+		new MenuItem({
+			label: 'Settings',
+			submenu: [groupMessagesMenuItem, directMessagesMenuItem],
+		}),
+	);
 
-	const appMenu = new Menu();
-	appMenu.append(settingsMenuItem);
 	return appMenu;
 }
 
