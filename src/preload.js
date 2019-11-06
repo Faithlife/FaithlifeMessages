@@ -13,7 +13,7 @@ Notification = function(title, options) {
 	});
 
 	if (notificationSettings.ignoreNotification) {
-		return {};
+		return { close: function() {} };
 	} else {
 		return new OldNotification(title, {
 			body: options.body,
