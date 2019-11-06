@@ -1,6 +1,6 @@
-import { Menu, MenuItem } from 'electron';
+import { Menu, MenuItem, clipboard } from 'electron';
 
-export function createAppMenu(app, appSettings) {
+export function createAppMenu(app, mainWindow, appSettings) {
 	const appMenu = new Menu();
 
 	// add MacOS app menu
@@ -48,6 +48,19 @@ export function createAppMenu(app, appSettings) {
 			}),
 		);
 	}
+
+	appMenu.append(
+		new MenuItem({
+			label: 'Share',
+			submenu: [
+				new MenuItem({
+					label: 'Copy location',
+					accelerator: 'Ctrl + Alt + C',
+					click: () => clipboard.writeText(mainWindow.webContents.getURL()),
+				}),
+			],
+		}),
+	);
 
 	const groupMessagesPlaySoundMenuItem = new MenuItem({
 		type: 'checkbox',

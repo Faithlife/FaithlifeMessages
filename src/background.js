@@ -69,7 +69,7 @@ if (!app.requestSingleInstanceLock()) {
 	app.on('ready', function() {
 		log.transports.file.level = 'info';
 		log.info('Starting up');
-		Menu.setApplicationMenu(createAppMenu(app, appSettings));
+
 		mainWindow = createWindow('main', {
 			width: 1200,
 			height: 800,
@@ -78,6 +78,8 @@ if (!app.requestSingleInstanceLock()) {
 				enableRemoteModule: false,
 			},
 		});
+
+		Menu.setApplicationMenu(createAppMenu(app, mainWindow, appSettings));
 
 		mainWindow.loadURL('https://beta.faithlife.com/signin?returnUrl=/messages?view=partial');
 
