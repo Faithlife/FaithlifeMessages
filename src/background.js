@@ -1,10 +1,12 @@
 import { Menu, app, ipcMain, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
-import createWindow from './helpers/window';
-import env from './env';
-import { appMenu, inputMenu, selectionMenu } from './menus';
 import log from 'electron-log';
 import path from 'path';
+
+import { AppSettings } from './helpers/app-settings';
+import createWindow from './helpers/window';
+import env from './env';
+import { createAppMenu, inputMenu, selectionMenu } from './menus';
 
 let mainWindow;
 let macCloseHandler = e => {
@@ -12,6 +14,9 @@ let macCloseHandler = e => {
 	e.preventDefault();
 	mainWindow.hide();
 };
+
+const appSettings = new AppSettings();
+appSettings.initialize();
 
 // Save userData in separate folders for each environment.
 // Thanks to this you can use production and development versions of the app
@@ -21,10 +26,29 @@ if (env.name !== 'production') {
 	app.setPath('userData', userDataPath + ' (' + env.name + ')');
 }
 
-ipcMain.on('notification-shim', () => {
-	if (!mainWindow.isFocused()) {
-		mainWindow.flashFrame(true);
+ipcMain.on('get-notification-settings', (event, arg) => {
+	const flashTray =
+		(arg.isDirect &&
+			appSettings.isDirectNotificationsEnabled() &&
+			appSettings.isDirectFlashTaskbarEnabled()) ||
+		(!arg.isDirect &&
+			appSettings.isGroupNotificationsEnabled() &&
+			appSettings.isGroupFlashTaskbarEnabled());
+
+	if (flashTray) {
+		if (!mainWindow.isFocused()) {
+			mainWindow.flashFrame(true);
+		}
 	}
+
+	event.returnValue = {
+		ignoreNotification:
+			(arg.isDirect && !appSettings.isDirectNotificationsEnabled()) ||
+			(!arg.isDirect && !appSettings.isGroupNotificationsEnabled()),
+		playSound:
+			(arg.isDirect && appSettings.isDirectNotificationSoundEnabled()) ||
+			(!arg.isDirect && appSettings.isGroupNotificationSoundEnabled()),
+	};
 });
 
 app.setAppUserModelId('com.faithlife.electron-messages');
@@ -45,7 +69,7 @@ if (!app.requestSingleInstanceLock()) {
 	app.on('ready', function() {
 		log.transports.file.level = 'info';
 		log.info('Starting up');
-		Menu.setApplicationMenu(null);
+		Menu.setApplicationMenu(createAppMenu(appSettings));
 		mainWindow = createWindow('main', {
 			width: 1200,
 			height: 800,
@@ -120,6 +144,7 @@ if (!app.requestSingleInstanceLock()) {
 	});
 
 	app.on('before-quit', () => {
+		appSettings.save();
 		mainWindow.removeListener('close', macCloseHandler);
 	});
 

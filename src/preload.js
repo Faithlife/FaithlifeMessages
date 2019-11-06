@@ -6,12 +6,21 @@ const { ipcRenderer } = require('electron');
 const OldNotification = Notification;
 
 Notification = function(title, options) {
-	ipcRenderer.send('notification-shim', {
+	const notificationSettings = ipcRenderer.sendSync('get-notification-settings', {
 		title,
-		options,
+		body: options.body,
+		isDirect: !options.silent,
 	});
 
-	return new OldNotification(title, options);
+	if (notificationSettings.ignoreNotification) {
+		return {};
+	} else {
+		return new OldNotification(title, {
+			body: options.body,
+			icon: options.icon,
+			silent: !notificationSettings.playSound,
+		});
+	}
 };
 
 Notification.prototype = OldNotification.prototype;
