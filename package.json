@@ -34,21 +34,17 @@
     "start": "gulp start"
   },
   "dependencies": {
-    "ajv": "^6.10.2",
-    "electron-log": "^3.0.8",
-    "electron-updater": "^4.1.2",
-    "fs-jetpack": "^2.2.3"
+    "electron-log": "^4.4.1",
+    "electron-updater": "^4.3.9",
+    "fs-jetpack": "^4.2.0"
   },
   "devDependencies": {
-    "electron": "^7.0.0",
-    "electron-builder": "^22.1.0",
+    "electron": "^15.3.0",
+    "electron-builder": "^22.13.1",
     "gulp": "^4.0.2",
     "gulp-batch": "^1.0.5",
     "gulp-watch": "^5.0.1",
-    "minimist": "^1.2.0",
-    "mocha": "^6.2.2",
-    "rollup": "^1.26.0",
-    "source-map-support": "^0.5.15",
-    "spectron": "^9.0.0"
+    "minimist": "^1.2.5",
+    "rollup": "^1.32.1"
   }
 }
