@@ -45,7 +45,7 @@
     "gulp": "^4.0.2",
     "gulp-batch": "^1.0.5",
     "gulp-watch": "^5.0.1",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.3",
     "mocha": "^6.2.2",
     "rollup": "^1.26.0",
     "source-map-support": "^0.5.15",
