@@ -40,7 +40,7 @@
     "fs-jetpack": "^2.2.3"
   },
   "devDependencies": {
-    "electron": "^7.0.0",
+    "electron": "^11.5.0",
     "electron-builder": "^22.1.0",
     "gulp": "^4.0.2",
     "gulp-batch": "^1.0.5",
